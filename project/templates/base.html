@@ -1,0 +1,47 @@
+{% set messages = get_flashed_messages() %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static',filename='css/index.css') }}" rel="stylesheet">
+    {% if messages %}
+    <link href="{{ url_for('static',filename='css/Toast.min.css') }}" rel="stylesheet">
+    {% endif %}
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+
+    {% include 'elements/header.html' %}
+    {% block body %}
+    {% endblock %}
+
+
+
+
+    <script src="{{ url_for('static',filename='css/js/Toast.min.js') }}"></script>
+    <script>
+
+        {% for message in messages %}
+
+        new Toast({
+            message: "{{ message}}",
+            type: 'danger'
+        });
+
+        {% endfor %}
+
+
+    </script>
+
+
+
+
+
+
+</body>
+
+</html>

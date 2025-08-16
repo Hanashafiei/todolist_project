@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>login | TODOLIST PROJECT</title>
+{% endblock %}
+
+{% block body %}
+<article>
+    <div class="main_flex">
+        <section class="form_box">
+            <h2 class="h2">login</h2>
+            <form  action="{{ url_for('login_blueprint.do_login') }}" method="post">
+                <div class="input_group">
+                    <label for="loginun">UserName:</label>
+                    <input type="text" placeholder="Hana88" name="username" id="loginun">
+                </div>
+                <div class="input_group">
+                    <label for="loginpw">Password:</label>
+                    <input type="password" placeholder="******" name="password" id="loginpw">
+                </div>
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Login">
+            </form>
+        </section>
+
+
+        <section class="form_box">
+            <h2 class="h2">register</h2>
+            <form action="{{ url_for('login_blueprint.register') }}" method="post">
+                <div class="input_group">
+                    <label for="rejisterun">UserName:</label>
+                    <input type="text" placeholder="Hana88" name="username" id="rejisterun">
+                </div>
+                <div class="input_group">
+                    <label for="rejisterpw">Password:</label>
+                    <input type="password" placeholder="*****" name="password" id="rejisterpw">
+                </div>
+                <div class="input_group">
+                    <label for="rejisterpw2">Password2:</label>
+                <input type="password" placeholder="*****" name="confirm_password" id="rejisterpw2">
+                </div>
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="submit" value="Register">
+            </form>
+
+
+        </section>
+    </div>
+
+
+</article>
+
+
+
+
+{% endblock %}

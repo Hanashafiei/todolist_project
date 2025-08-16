@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>TODOLIST PROJECT</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="main_flex">
+<section class="users_list">
+    <h3 > TOP 3 Users :</h3>
+    <ul>
+        {% for user in top_users %}
+        <li>
+            <img src="{{ url_for('static',filename='css/image/user.png') }}">
+            <span >{{user.user_name}}</span>
+            <span style="text-align: center;margin: 1px 3px;"> tasks:{{user.tasks_count}}</span>
+            <span style="float: right;">{{user.contact.city}}</span>
+
+        </li>
+
+        {% endfor %}
+    </ul>
+</section>
+
+
+<section class="users_list">
+    <h3 > NEW 3 Users :</h3>
+    <ul>
+        {% for user in new_users %}
+        <li>
+            <img src="{{ url_for('static',filename='css/image/user.png') }}">
+            <span >{{user.user_name}}</span>
+            <span style="text-align: center; margin: 1px 3px;"> tasks:{{user.tasks_count}}</span>
+            <span style="float: right;">{{user.contact.city}}</span>
+
+        </li>
+
+        {% endfor %}
+    </ul>
+
+
+</section>
+</div>
+
+{% endblock %}

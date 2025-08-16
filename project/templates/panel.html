@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>panel | TODOLIST PROJECT</title>
+{% endblock %}
+
+{% block body %}
+<section class="tasks_box">
+    <h2> your tasks:</h2>
+    <ul id="tasks">
+        {% for task in user.tasks %}
+        <li>
+            <span onclick="edit(this, '{{task.id}}')">{{ task.description }}</span>
+            <span class="done_btn" onclick="remove_task('{{task.id}}', this)">
+                <img src="{{ url_for('static',filename='css/image/delet.png') }}"></span>
+
+        </li>
+        {% endfor %}
+    </ul>
+    <form name="add" action="javascript:add_task()" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="add_task_box">
+            <input class="input" type="text" id="description" placeholder="add a new task...press Enter"
+                name="description">
+        </div>
+    </form>
+</section>
+
+<section class="form_box" style="margin: 10px auto ; width: 480px;">
+    <form action="{{ url_for('panel_blueprint.edit_contacat') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="input_group">
+            <label for="phone">Phone:</label>
+            <input type="number" name="phone" placeholder="phone" value="{{user.contact.phone}}" id="phone">
+        </div>
+        <div class="input_group">
+            <label for="city">City:</label>
+            <input type="text" name="city" placeholder="city" value="{{user.contact.city}}" id="city">
+        </div>
+        <input type="submit">
+
+    </form>
+</section>
+
+<script>
+    let tasks = document.getElementById("tasks")
+    let description = document.getElementById("description")
+    const add_task = () => {
+        fetch("{{ url_for('panel_blueprint.add') }}", { method: "POST", body: new FormData(add) })
+            .then((res) => {
+                res.json().then(result => {
+                    if (result.status == "ok") {
+                        let li = document.createElement("li")
+                        li.innerHTML = `
+  <span onclick="edit(this, '${result.task_id}')">${description.value}</span>
+  <span class="done_btn" onclick="remove_task('${result.task_id}', this)">
+    <img src="{{ url_for('static',filename='css/image/delet.png') }}">
+  </span>
+`
+                        tasks.appendChild(li)
+                        description.value = ""
+
+                    } else if (result.status == "nologin") {
+                        alert("no login")
+                    }
+
+                })
+            })
+
+    }
+    const remove_task = (id, element) => {
+        let data = new FormData()
+        data.append("id", id)
+        data.append("csrf_token", "{{ csrf_token() }}")
+        fetch("{{ url_for('panel_blueprint.remove') }}", { method: "POST", body: data })
+            .then((res) => {
+                res.json().then((result) => {
+                    if (result.status == "ok") {
+                        element.parentElement.style.height = '0px'
+                        element.parentElement.style.padding = '0px'
+                        setTimeout(() => {
+                            element.parentElement.remove()
+
+                        }, 320);
+                    } else if (result.status == "nologin") {
+                        alert("no login")
+                    }
+
+                })
+            })
+    }
+
+
+    const edit = (element, id) => {
+        if (element.innerText != "") {
+            const input = document.createElement('input')
+            input.classList.add("edit_input")
+            input.type = 'text'
+            input.addEventListener('focusout', function () {
+                update_task(id, this)
+
+            });
+            input.value = element.innerText
+
+
+            element.innerHTML = ''
+            element.appendChild(input)
+
+            input.focus()
+
+        }
+
+
+    }
+    const update_task = (id, element) => {
+        new_description = element.value
+        let data = new FormData()
+        data.append("id", id)
+        data.append("csrf_token", "{{ csrf_token() }}")
+        data.append("description", new_description)
+        fetch("{{ url_for('panel_blueprint.update') }}", { method: "POST", body: data })
+            .then((res) => {
+                res.json().then((result) => {
+                    if (result.status == "ok") {
+                        element.parentElement.innerHTML = new_description
+                    } else if (result.status == "nologin") {
+                        alert("no login")
+                    }
+
+                })
+            })
+    }
+</script>
+
+
+
+{% endblock %}
